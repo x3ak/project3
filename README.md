@@ -1,4 +1,4 @@
 project3
 ========
 
-nodejs + html5 + socketio game
+nodejs + socket.io + express + box2D + html5 multiplayer game
