@@ -13,10 +13,10 @@ PlayerClass = EntityClass.extend({
         };
 
         this.controlls = {
-            left: 38,
-            up: 39,
-            right: 40,
-            down: 41
+            left: 37,
+            up: 38,
+            right: 39,
+            down: 40
         };
 
         settings.size = {x:1, y:1};
