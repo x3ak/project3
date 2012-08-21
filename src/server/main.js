@@ -70,7 +70,6 @@ io.sockets.on('connection', function (socket) {
             socket.get('player', function (err, player){
                 for(var keyName in player.controlls) {
 
-                    console.log(data.keyCode);
                     if(data.keyCode == player.controlls[keyName]) {
                         player.keyboard[keyName] = data.down;
                         break;

@@ -53,16 +53,15 @@ PlayerClass = EntityClass.extend({
     },
 
     getSpeed: function() {
-        var velocity = this.physBody.GetLinearVelocity();
 
-        var len =  velocity.Length();
-        if(len < 0.3) {
-            this.physBody.SetLinearVelocity(new Vec2(0,0));
-//            this.physBody.SetAwake(false);
-//            this.physBody.SetAngularVelocity(0);
+        if(this.tmpSpeed == false) {
+            var velocity = this.physBody.GetLinearVelocity();
+
+            this.tmpSpeed = velocity.Length();
         }
 
-        return len;
+
+        return this.tmpSpeed;
     },
 
     update: function () {
@@ -84,13 +83,22 @@ PlayerClass = EntityClass.extend({
         if (this.keyboard.down) {
             force.Add(new Vec2(0,speed));
         }
+
+
         // if there is any force, then apply it
         if (force.x||force.y) {
             this.physBody.ApplyImpulse(force, this.physBody.GetWorldCenter());
         }
 
 
-//        this.physBody.ApplyImpulse(force, this.physBody.GetWorldCenter());
+        //stop body if its moving slow
+        if(this.getSpeed() < 0.3) {
+            this.physBody.SetLinearVelocity(new Vec2(0,0));
+        }
+
+
+        //make it false, to recache on next update
+        this.tmpSpeed = false;
 
 
     }
