@@ -9,9 +9,9 @@
     <!--<script src="http://localhost/node/Box2dWeb-2.1.a.3.js"></script>-->
     <!--<script src="http://localhost/node/Core/Class.js"></script>-->
     <!--<script src="http://localhost/node/Core/PhysicsEngine.js"></script>-->
-    <script src="/js/cookie.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="http://95.65.49.2:3000/socket.io/socket.io.js"></script>
+    <script src="./js/cookie.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
         var resolution = [1000, 800];
         var pixelsInMeter = 50.0;
@@ -79,7 +79,7 @@
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
 
-            socket = io.connect('http://95.65.49.2:3000');
+            socket = io.connect('http://localhost:3000');
 
             socket.on('connect', function(){
                 console.log('connected!');
@@ -91,20 +91,15 @@
                 $('#spawn').hide();
             });
 
-//            socket.on('newPlayer', function(data){
-//                console.log('new player');
-//                players[data.id] = new Shape(100,80, "#0F0");
-//            });
-
-            socket.on('spawned', function (data) {
-                if(data.sessid != getSessId())
-                    throw "WRONG SESSION ID";
-
-                players[data.id] = new Shape(100,80, "#0F0");
+            socket.on('newPlayer', function(data) {
+                //if new player spawned is our player
+                if(data.sessid == getSessId()) {
+                    players[data.id] = new Shape(100,80, "#0F0");
+                }
             });
 
             socket.on('update', function (worldData) {
-//                console.log(worldData.length);
+
                 worldData.forEach(function(data){
                     var shape = players[data.id];
 
@@ -127,28 +122,24 @@
 
             window.requestAnimationFrame(draw);
 
-            $("#canvas").mousedown(function(e){
-                console.log(e);
 
-                var cmd = "gGameEngine.handleEvent('mousedown', {x:"+ e.offsetX + ", y: " + e.offsetY + "});";
-
-                socket.emit('game.event', cmd);
-            });
         });
 
 
         $(window).keydown(function(e){
+            //do not send event if its already pressed
             if(keysPressed[e.keyCode]) return;
 
-            socket.emit('keypress_event', {keyCode: e.keyCode});
+            socket.emit('game.event.keyboard', {down: true, keyCode: e.keyCode});
 
             keysPressed[e.keyCode] = true;
         });
 
         $(window).keyup(function(e){
-            if(!keysPressed[e.keyCode]) return;
+            //do not send event if its not pressed
+            if(keysPressed[e.keyCode] == false) return;
 
-            socket.emit('keyup_event', {keyCode: e.keyCode});
+            socket.emit('game.event.keyboard', {down: false, keyCode: e.keyCode});
 
             delete keysPressed[e.keyCode];
         });

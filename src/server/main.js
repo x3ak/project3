@@ -9,17 +9,13 @@ var fs = require('fs')
 
 io.set('log level', 1);
 
-server.listen(3000);
 
-var games = [];
+server.listen(3000);
 
 // Shared libs
 var game_module = require("./game.js");
 
-var game = game_module.createGameInstance({
-    stats: {},
-    broadcaster: {io : io}
-});
+var game = game_module.createGameInstance({});
 
 game.gGameEngine.setup();
 
@@ -52,76 +48,37 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('spawn', function(data){
 
+        //retrieve already logged in player from memory
         var connectedPlayer = game.gGameEngine.getPlayerBySessId(data.sessid);
+
+
         if(!connectedPlayer) {
+            //todo login player, for now just create dummy one
             connectedPlayer = game.gGameEngine.spawnPlayer(new Date().getTime(), data.sessid, 100 / game.Constants.MPX_RATIO, 100 / game.Constants.MPX_RATIO);
         }
 
 
-        socket.set('player', connectedPlayer, function(){
-            socket.emit('spawned', {id: connectedPlayer.id, sessid: connectedPlayer.sessid})
+        //save player and notify client(s) that new player is spawned
+        socket.set('player', connectedPlayer, function() {
             socket.broadcast.emit('newPlayer', {id: connectedPlayer.id, sessid: connectedPlayer.sessid});
         });
 
-        socket.on('keypress_event', function(data){
+
+        socket.on('game.event.keyboard', function(data){
+
+            //retrieve player object from socket
             socket.get('player', function (err, player){
+                for(var keyName in player.controlls) {
 
+                    if(data.keyCode == player.controlls[keyName]) {
+                        player.keyboard[keyName] = data.down;
+                        break;
+                    }
 
-                switch (data.keyCode) {
-                    case 37 :
-                        player.controlls.left=true;
-                        player.controllsStart.left=new Date().getTime();
-                        break;
-                    case 38 :
-                        player.controlls.up=true;
-                        player.controllsStart.up=new Date().getTime();
-                        break;
-                    case 39 :
-                        player.controlls.right=true;
-                        player.controllsStart.right=new Date().getTime();
-                        break;
-                    case 40 :
-                        player.controlls.down=true;
-                        player.controllsStart.down=new Date().getTime();
-                        break;
                 }
-
-                console.log('keypress_event %j, from: %s', data, player.sessid);
             });
-
-
-        });
-
-        socket.on('game.event', function(data){
-            game_module.runInContext(data, game)
         });
 
 
-        socket.on('keyup_event', function(data){
-            socket.get('player', function (err, player){
-
-                switch (data.keyCode) {
-                    case 37 :
-                        player.controlls.left=false;
-                        break;
-                    case 38 :
-                        player.controlls.up=false;
-                        break;
-                    case 39 :
-                        player.controlls.right=false;
-                        break;
-                    case 40 :
-                        player.controlls.down=false;
-                        break;
-                }
-
-                console.log('keyup_event %j, from: %s', data, player.sessid);
-            } );
-        });
     });
-
-
-
-
-
 });

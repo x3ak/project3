@@ -4,18 +4,19 @@ PlayerClass = EntityClass.extend({
         this.zIndex = 1;
         this.physBody = null;
         this.sessid = null;
-        this.controlls = {
-            up: false,
-            down: false,
+
+        this.keyboard = {
             left: false,
-            right: false
+            up: false,
+            right: false,
+            down: false
         };
 
-        this.controllsStart = {
-            up: 0,
-            down: 0,
-            left: 0,
-            right: 0
+        this.controlls = {
+            left: 38,
+            up: 39,
+            right: 40,
+            down: 41
         };
 
         settings.size = {x:1, y:1};
@@ -71,16 +72,16 @@ PlayerClass = EntityClass.extend({
         var force = new Vec2(0, 0);
 
         // according to the key(s) pressed, add the proper vector force
-        if (this.controlls.left) {
+        if (this.keyboard.left) {
             force.Add(new Vec2(-speed,0));
         }
-        if (this.controlls.right) {
+        if (this.keyboard.right) {
             force.Add(new Vec2(speed,0));
         }
-        if (this.controlls.up) {
+        if (this.keyboard.up) {
             force.Add(new Vec2(0,-speed));
         }
-        if (this.controlls.down) {
+        if (this.keyboard.down) {
             force.Add(new Vec2(0,speed));
         }
         // if there is any force, then apply it

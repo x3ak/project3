@@ -36,7 +36,7 @@ function getSessId() {
 
     if(!id) {
         id = new Date().getTime();
-        createCookie('PHPSESSID', id);
+        createCookie('PHPSESSID', id, 50);
     }
 
     return id;

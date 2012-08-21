@@ -56,13 +56,3 @@ exports.createGameInstance = function (callbacks) {
 
     return fakeContext;
 };
-
-
-exports.runInContext = function(code, context) {
-    try {
-        vm.runInContext(code, context);
-    }
-    catch (e) {
-        console.log('problem while running code in context')
-    }
-};

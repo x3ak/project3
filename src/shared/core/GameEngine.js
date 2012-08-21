@@ -23,9 +23,9 @@ GameEngineClass = Class.extend({
 
         this.addWalls();
 
-        for(var i=0; i< 100; i++) {
-            this.spawnPlayer('test'+i, 'sess'+i, 10,10);
-        }
+//        for(var i=0; i< 0; i++) {
+//            this.spawnPlayer('test'+i, 'sess'+i, 10,10);
+//        }
     },
 
     spawnEntity: function (typename, x, y, settings) {
@@ -73,6 +73,8 @@ GameEngineClass = Class.extend({
             if(ent.sessid == sessId)
                 return ent;
         }
+
+        return null;
     },
 
     update: function() {
