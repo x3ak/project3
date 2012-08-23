@@ -9,8 +9,9 @@ var fs = require('fs')
 
 io.set('log level', 1);
 
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
 
-server.listen(3000);
+server.listen(config.gameServer.port);
 
 // Shared libs
 var game_module = require("./game.js");
@@ -60,7 +61,7 @@ io.sockets.on('connection', function (socket) {
 
         //save player and notify client(s) that new player is spawned
         socket.set('player', connectedPlayer, function() {
-            socket.broadcast.emit('newPlayer', {id: connectedPlayer.id, sessid: connectedPlayer.sessid});
+            socket.broadcast.emit('newPlayer', {id: connectedPlayer.id, sessid: connectedPlayer.sessid, pos: connectedPlayer.physBody.GetPosition()});
         });
 
 

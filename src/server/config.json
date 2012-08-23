@@ -1,0 +1,6 @@
+{
+    "gameServer":{
+        "address":"localhost",
+        "port":3000
+    }
+}

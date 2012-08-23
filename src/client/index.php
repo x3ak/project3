@@ -1,3 +1,9 @@
+<?php
+$config = file_get_contents(dirname(__DIR__).DIRECTORY_SEPARATOR.'server'.DIRECTORY_SEPARATOR.'config.json');
+$config = json_decode($config);
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -11,7 +17,7 @@
     <!--<script src="http://localhost/node/Core/PhysicsEngine.js"></script>-->
     <script src="./js/cookie.js"></script>
     <script src="./js/utils.js"></script>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="http://<?=$config->gameServer->address?>:<?=$config->gameServer->port?>/socket.io/socket.io.js"></script>
     <script>
         var resolution = [1000, 800];
         var pixelsInMeter = 50.0;
@@ -79,7 +85,7 @@
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
 
-            socket = io.connect('http://localhost:3000');
+            socket = io.connect('http://<?=$config->gameServer->address?>:<?=$config->gameServer->port?>');
 
             socket.on('connect', function(){
                 console.log('connected!');
@@ -115,6 +121,7 @@
                     shape.angle = data.angle;
                     shape.pos = data.pos;
                     shape.speed = data.speed;
+
                 });
 
 
