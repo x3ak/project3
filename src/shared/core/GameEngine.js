@@ -83,12 +83,7 @@ GameEngineClass = Class.extend({
             ent.update();
         }
 
-    },
-
-    handleEvent: function(eventName, data) {
-        console.log(eventName, data);
     }
-
 });
 
 var gGameEngine = new GameEngineClass();

@@ -24,7 +24,7 @@
 }());
 
 
-function screenPosition(position) {
+function screenPosition(position, pixelsInMeter) {
     var offsetX = 0;
     var offsetY = 0;
 

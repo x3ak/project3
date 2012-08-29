@@ -1,6 +1,6 @@
 <?php
-$config = file_get_contents(dirname(__DIR__).DIRECTORY_SEPARATOR.'server'.DIRECTORY_SEPARATOR.'config.json');
-$config = json_decode($config);
+$configString = file_get_contents(dirname(__DIR__).DIRECTORY_SEPARATOR.'server'.DIRECTORY_SEPARATOR.'config.json');
+$config = json_decode($configString);
 
 ?>
 
@@ -20,8 +20,8 @@ $config = json_decode($config);
     <script src="http://<?=$config->gameServer->address?>:<?=$config->gameServer->port?>/socket.io/socket.io.js"></script>
     <script>
         var resolution = [1000, 800];
-        var pixelsInMeter = 50.0;
 
+        var config = <?=$configString?>;
 
         var players = {};
 
@@ -114,7 +114,7 @@ $config = json_decode($config);
                         players[data.id] = shape;
                     }
 
-                    var pos = screenPosition(data.pos);
+                    var pos = screenPosition(data.pos, config.game.pixelsInMeter);
                     shape.x = pos.x;
                     shape.y = pos.y;
 

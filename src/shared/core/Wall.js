@@ -15,7 +15,7 @@ WallClass = EntityClass.extend({
             y: inputy,
             angle: 0,
 
-            halfHeight: settings.size.y / 2, //JJG: divide by 2 to let the player squeeze through narrow corridors
+            halfHeight: settings.size.y / 2,
             halfWidth: settings.size.x / 2,
 
             friction: 0.7,

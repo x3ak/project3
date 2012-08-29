@@ -10,7 +10,6 @@ var fs = require('fs')
 io.set('log level', 1);
 
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
-
 server.listen(config.gameServer.port);
 
 // Shared libs
