@@ -67,10 +67,14 @@ $config = json_decode($configString);
 
             ctx.strokeStyle = "#F00";
             ctx.lineWidth   = 2;
+
+            //draw border
             ctx.strokeRect(20,20, 960, 760);
 
+            //draw middle block
             ctx.strokeRect(500-60,400-60, 120, 120);
 
+            //draw all players
             for(var id in players) {
                 ctx.save();
                 players[id].draw();
@@ -109,12 +113,13 @@ $config = json_decode($configString);
                 worldData.forEach(function(data){
                     var shape = players[data.id];
 
+                    var pos = screenPosition(data.pos, config.game.pixelsInMeter);
+
                     if(!shape) {
-                        shape = new Shape(100,80, "#F00");
+                        shape = new Shape(pos.x, pos.y, "#F00");
                         players[data.id] = shape;
                     }
 
-                    var pos = screenPosition(data.pos, config.game.pixelsInMeter);
                     shape.x = pos.x;
                     shape.y = pos.y;
 
@@ -123,13 +128,9 @@ $config = json_decode($configString);
                     shape.speed = data.speed;
 
                 });
-
-
             });
 
             window.requestAnimationFrame(draw);
-
-
         });
 
 

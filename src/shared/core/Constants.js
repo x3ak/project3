@@ -1,4 +1,3 @@
-
 var Constants = {
 
     GAME_UPDATES_PER_SEC : 10,

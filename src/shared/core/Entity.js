@@ -20,7 +20,6 @@ EntityClass = Class.extend({
     update: function() {
 
     }
-
 });
 
 
