@@ -31,7 +31,7 @@ function getWorldData() {
 
     game.gGameEngine.players.forEach(function(player){
 
-        //todo send only changed data
+        //todo send only if there is changed data, and only changed data should be sent
         updateData.push({
             id: player.id,
             pos: player.physBody.GetPosition(),
@@ -46,7 +46,7 @@ function getWorldData() {
 io.sockets.on('connection', function (socket) {
 
 
-    socket.on('spawn', function(data){
+    socket.on('spawn', function(data) {
 
         //retrieve already logged in player from memory
         var connectedPlayer = game.gGameEngine.getPlayerBySessId(data.sessid);
@@ -57,24 +57,29 @@ io.sockets.on('connection', function (socket) {
             connectedPlayer = game.gGameEngine.spawnPlayer(new Date().getTime(), data.sessid, 100 / game.Constants.MPX_RATIO, 100 / game.Constants.MPX_RATIO);
         }
 
-
         //save player and notify client(s) that new player is spawned
         socket.set('player', connectedPlayer, function() {
             socket.broadcast.emit('newPlayer', {id: connectedPlayer.id, sessid: connectedPlayer.sessid, pos: connectedPlayer.physBody.GetPosition()});
         });
 
 
+        /**
+         * data.keyCode - keyCode of key pressed
+         * data.down - true on key is pressed, else false
+         */
         socket.on('game.event.keyboard', function(data){
 
             //retrieve player object from socket
-            socket.get('player', function (err, player){
-                for(var keyName in player.controlls) {
 
-                    if(data.keyCode == player.controlls[keyName]) {
+            socket.get('player', function (err, player) {
+
+                //loop through player's keyMap and report if  key is pressed or released
+                for(var keyName in player.keyMap) {
+
+                    if(data.keyCode == player.keyMap[keyName]) {
                         player.keyboard[keyName] = data.down;
                         break;
                     }
-
                 }
             });
         });

@@ -6,17 +6,18 @@ PlayerClass = EntityClass.extend({
         this.sessid = null;
 
         this.keyboard = {
-            left: false,
-            up: false,
+            left:  false,
+            up:    false,
             right: false,
-            down: false
+            down:  false
         };
 
-        this.controlls = {
-            left: 37,
-            up: 38,
+        //player default keyMap
+        this.keyMap = {
+            left:  37,
+            up:    38,
             right: 39,
-            down: 40
+            down:  40
         };
 
         settings.size = {x:1, y:1};
@@ -26,25 +27,25 @@ PlayerClass = EntityClass.extend({
 
 
         var entityDef = {
-            id: "player",
-            x: this.pos.x,
-            y: this.pos.y,
-            angle: 0,
+            id:"player",
+            x:this.pos.x,
+            y:this.pos.y,
+            angle:0,
 
-            halfHeight: 0.5, //JJG: divide by 2 to let the player squeeze through narrow corridors
-            halfWidth: 0.5,
-            friction: 0.2,
+            halfHeight:0.5, //JJG: divide by 2 to let the player squeeze through narrow corridors
+            halfWidth:0.5,
+            friction:0.2,
 
-            linearDamping: 7,
-            angularDamping: 7,
+            linearDamping:7,
+            angularDamping:7,
 
 
-            categories: ['player', 'team0'],
-            collidesWith: ['all'],
+            categories:['player', 'team0'],
+            collidesWith:['all'],
             //mapobject','team0','team1','projectile','pickupobject'],
-            userData: {
-                "id": "player",
-                "ent": this
+            userData:{
+                "id":"player",
+                "ent":this
             }
         };
         this.physBody = gPhysicsEngine.addBody(entityDef);
@@ -52,16 +53,8 @@ PlayerClass = EntityClass.extend({
 
     },
 
-    getSpeed: function() {
-
-        if(this.tmpSpeed == false) {
-            var velocity = this.physBody.GetLinearVelocity();
-
-            this.tmpSpeed = velocity.Length();
-        }
-
-
-        return this.tmpSpeed;
+    getSpeed: function () {
+        return this.physBody.GetLinearVelocity().Length();
     },
 
     update: function () {
@@ -72,34 +65,32 @@ PlayerClass = EntityClass.extend({
 
         // according to the key(s) pressed, add the proper vector force
         if (this.keyboard.left) {
-            force.Add(new Vec2(-speed,0));
+            force.Add(new Vec2(-speed, 0));
         }
+
         if (this.keyboard.right) {
-            force.Add(new Vec2(speed,0));
+            force.Add(new Vec2(speed, 0));
         }
+
         if (this.keyboard.up) {
-            force.Add(new Vec2(0,-speed));
+            force.Add(new Vec2(0, -speed));
         }
+
         if (this.keyboard.down) {
-            force.Add(new Vec2(0,speed));
+            force.Add(new Vec2(0, speed));
         }
 
 
         // if there is any force, then apply it
-        if (force.x||force.y) {
+        if (force.x || force.y) {
             this.physBody.ApplyImpulse(force, this.physBody.GetWorldCenter());
         }
 
 
         //stop body if its moving slow
-        if(this.getSpeed() < 0.3) {
-            this.physBody.SetLinearVelocity(new Vec2(0,0));
+        if (this.getSpeed() < 0.3) {
+            this.physBody.SetLinearVelocity(new Vec2(0, 0));
         }
-
-
-        //make it false, to recache on next update
-        this.tmpSpeed = false;
-
 
     }
 
